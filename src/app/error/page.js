@@ -13,12 +13,16 @@ export default function ErrorPage({ searchParams }) {
       {type === "magiclink" && (
         <strong>Could not send a magic link. Maybe you had a typo in your E-mail?</strong>
       )}
+      {type === "invalid_magiclink" && (
+        <strong>The magic link was invalid. Maybe it expired? Please request
+        a new one.</strong>
+      )}
       {!knownErrors.includes(type) && (
         <strong>
           Something went wrong. Please try again or contact support.
         </strong>
       )}
-
+      
       <br /><br />
 
       <Link role="button" href="/">Go back.</Link>
