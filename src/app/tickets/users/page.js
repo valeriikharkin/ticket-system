@@ -24,7 +24,7 @@ export default function UserList() {
       <thead>
         <tr>
           <th>Name</th>
-          <th>Job</th>{" "}
+          <th>Job</th>
         </tr>
       </thead>
       <tbody>
