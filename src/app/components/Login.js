@@ -17,6 +17,9 @@ export const Login = ({ formType = "pw-login" }) => {
 
   const formAction = isPasswordLogin ? `/auth/pw-login` : `/auth/magic-link`;
 
+  const activeProps = { className: "contrast" };
+  const inactiveProps = { className: "secondary outline" };
+
   useEffect(() => {
     const {
       data: { subscription },
@@ -114,6 +117,7 @@ export const Login = ({ formType = "pw-login" }) => {
                 pathname: "/",
                 query: { magicLink: "no" },
               }}
+              {...(isPasswordLogin ? activeProps : inactiveProps )}
             >
               Go to Password Login
             </Link>
@@ -126,6 +130,7 @@ export const Login = ({ formType = "pw-login" }) => {
                 pathname: "/",
                 query: { magicLink: "yes" },
               }}
+              {...(isMagicLinkLogin ? activeProps : inactiveProps )}
             >
               Go to Magic Link Login
             </Link>
@@ -142,6 +147,7 @@ export const Login = ({ formType = "pw-login" }) => {
               textAlign: "center",
               display: "block",
             }}
+            
           >
             Go to Password Recovery
           </Link>
