@@ -1,7 +1,25 @@
+import { getSupabaseAdminClient } from "@/supabase-utils/adminClient";
 import { Login } from "./components/Login";
 import { FORM_TYPES } from "./components/formTypes";
+import { notFound } from "next/navigation";
 
-export default function LoginPage({ searchParams }) {
+export default async function LoginPage({ searchParams, tenant }) {
+
+  // console.log("tenant", tenant)
+  
+  const supabaseAdmin = getSupabaseAdminClient()
+  const { data, error } = await supabaseAdmin
+                            .from("tenants")
+                            .select("*")
+                            .eq("id", tenant)
+                            .single()
+
+  if (error) {
+    return notFound();
+  }
+
+  const { name: tenantName } = data;
+
   const wantsMagicLink = searchParams.magicLink === "yes";
   const wantsPasswordRecovery = searchParams.passwordRecovery === "yes";
 
@@ -12,5 +30,5 @@ export default function LoginPage({ searchParams }) {
     formType = FORM_TYPES.PASSWORD_RECOVERY;
   }
 
-  return <Login formType={formType} />;
+  return <Login tenantName={tenantName} tenant={tenant} formType={formType} />;
 }

@@ -1,11 +1,13 @@
 "use client";
+
 import { getSupabaseBrowserClient } from "@/supabase-utils/browserClient";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { FORM_TYPES } from "./formTypes";
+import { urlPath } from "@/utils/url-helpers";
 
-export const Login = ({ formType = "pw-login" }) => {
+export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const supabase = getSupabaseBrowserClient();
@@ -15,7 +17,7 @@ export const Login = ({ formType = "pw-login" }) => {
   const isPasswordLogin = formType === FORM_TYPES.PASSWORD_LOGIN;
   const isMagicLinkLogin = formType === FORM_TYPES.MAGIC_LINK;
 
-  const formAction = isPasswordLogin ? `/auth/pw-login` : `/auth/magic-link`;
+  const formAction = isPasswordLogin ? `/${urlPath("auth/pw-login", tenant)}` : `/${urlPath("auth/magic-link", tenant)}`;
 
   const activeProps = { className: "contrast" };
   const inactiveProps = { className: "secondary outline" };
@@ -25,7 +27,7 @@ export const Login = ({ formType = "pw-login" }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN") {
-        router.push("/tickets");
+        router.push(`/${tenant}/tickets`);
       }
     });
 
@@ -67,6 +69,9 @@ export const Login = ({ formType = "pw-login" }) => {
         <header>
           {isPasswordRecovery && <strong>Request new password</strong>}
           {!isPasswordRecovery && <strong>Login</strong>}
+          <div style={{ display: "block", fontSize: "0.7em" }}>
+            {tenantName}
+          </div>
         </header>
 
         <fieldset>
@@ -114,7 +119,7 @@ export const Login = ({ formType = "pw-login" }) => {
               role="button"
               className="contrast"
               href={{
-                pathname: "/",
+                pathname: `/${tenant}/`,
                 query: { magicLink: "no" },
               }}
               {...(isPasswordLogin ? activeProps : inactiveProps )}
@@ -127,7 +132,7 @@ export const Login = ({ formType = "pw-login" }) => {
               role="button"
               className="contrast"
               href={{
-                pathname: "/",
+                pathname: `/${tenant}/`,
                 query: { magicLink: "yes" },
               }}
               {...(isMagicLinkLogin ? activeProps : inactiveProps )}
@@ -140,7 +145,7 @@ export const Login = ({ formType = "pw-login" }) => {
         {!isPasswordRecovery && (
           <Link
             href={{
-              pathname: "/",
+              pathname: `/${tenant}/`,
               query: { passwordRecovery: "yes" },
             }}
             style={{

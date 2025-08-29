@@ -11,11 +11,23 @@ export async function middleware(req) {
   const requestedPath = req.nextUrl.pathname
   const sessionUser =  session.data?.session?.user
 
-  const [tenant, ...restOfPath] = requestedPath.substr(1).split("/")
-  if ( !/[a-z0-9-_]+/.test(tenant) ) {
+  let [tenant, ...restOfPath] = requestedPath.substr(1).split("/")
+  const applicationPath = "/" + restOfPath.join("/")
+  tenant = "packt"
+
+  console.log('///', "requestedPath: " + requestedPath,"tenant: " + typeof tenant, applicationPath)
+
+  // 1. Handle the root URL "/"
+  if (requestedPath === "/") {
+    if (sessionUser) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    return response.value;
+  }
+
+  if ( !/[a-z0-9-_]+/.test(tenant) && tenant !== "" ) {
     return NextResponse.rewrite(new URL("/not-found", req.url));
   }
-  const applicationPath = "/" + restOfPath.join("/")
 
   if (applicationPath.startsWith("/tickets")) {
     if (!sessionUser) {
@@ -26,6 +38,11 @@ export async function middleware(req) {
       }
     }
   }
+
+  if (requestedPath === "/") {
+    return NextResponse.redirect(new URL("/", req.url))
+  }
+
   return response.value
 }
 

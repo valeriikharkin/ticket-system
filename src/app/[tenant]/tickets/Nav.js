@@ -5,8 +5,9 @@ import { usePathname } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/supabase-utils/browserClient";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { urlPath } from "@/utils/url-helpers";
 
-export default function Nav() {
+export default function Nav({ tenant }) {
 
   const pathname = usePathname()
   const activeProps = { className: "contrast" };
@@ -21,7 +22,7 @@ export default function Nav() {
     } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("onAuthStateChange", event)
       if (event === "SIGNED_OUT") {
-        router.push("/")
+        router.push(`/${tenant}`)
       }
     })
     
@@ -32,17 +33,17 @@ export default function Nav() {
     <nav>
       <ul>
         <li>
-          <Link role="button" href="/tickets" {...(pathname === "/tickets" ? activeProps : inactiveProps )}>
+          <Link role="button" href={urlPath("/tickets", tenant)} {...(pathname === urlPath("/tickets", tenant) ? activeProps : inactiveProps )}>
             Ticket List
           </Link>
         </li>
         <li>
-          <Link role="button" href="/tickets/new" {...(pathname === "/tickets/new" ? activeProps : inactiveProps )}>
+          <Link role="button" href={urlPath("/tickets/new", tenant)} {...(pathname === urlPath("/tickets/new", tenant) ? activeProps : inactiveProps )}>
             Create new Ticket
           </Link>
         </li>
         <li>
-          <Link role="button" href="/tickets/users" {...(pathname === "/tickets/users" ? activeProps : inactiveProps )}>
+          <Link role="button" href={urlPath("/tickets/users", tenant)} {...(pathname === urlPath("/tickets/users", tenant) ? activeProps : inactiveProps )}>
             User List
           </Link>
         </li>
@@ -51,7 +52,7 @@ export default function Nav() {
         <li>
           <Link 
             role="button" 
-            href="/logout" 
+            href={`/${tenant}/logout`} 
             prefetch={false}
             className="secondary"
             onClick={(event) => {

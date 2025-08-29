@@ -5,10 +5,13 @@ export default function TicketLayout(pageProps) {
   return (
     <>
       <section style={{ borderBottom: "1px solid gray" }}>
+
         {/* tenant name component goes here */}
-        <TenantName tenantName="Packt" />
+        <TenantName tenantName={pageProps.params.tenant} />
+
         {/* navigation component goes here */}
-        <Nav />
+        <Nav tenant={pageProps.params.tenant} />
+
       </section>
       
       <section>{pageProps.children}</section>
