@@ -3,9 +3,9 @@ import { Login } from "./components/Login";
 import { FORM_TYPES } from "./components/formTypes";
 import { notFound } from "next/navigation";
 
-export default async function LoginPage({ searchParams, tenant }) {
+export default async function LoginPage({ searchParams, params: { tenant } }) {
 
-  // console.log("tenant", tenant)
+  console.log("tenant", tenant)
   
   const supabaseAdmin = getSupabaseAdminClient()
   const { data, error } = await supabaseAdmin
@@ -13,6 +13,8 @@ export default async function LoginPage({ searchParams, tenant }) {
                             .select("*")
                             .eq("id", tenant)
                             .single()
+
+  console.log(data, '///////////////')
 
   if (error) {
     return notFound();
