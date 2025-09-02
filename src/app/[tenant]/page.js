@@ -5,16 +5,12 @@ import { notFound } from "next/navigation";
 
 export default async function LoginPage({ searchParams, params: { tenant } }) {
 
-  // console.log("tenant", tenant)
-  
   const supabaseAdmin = getSupabaseAdminClient()
   const { data, error } = await supabaseAdmin
                             .from("tenants")
                             .select("*")
                             .eq("id", tenant)
                             .single()
-
-  // console.log(data, '///////////////')
 
   if (error) {
     return notFound();

@@ -1,13 +1,21 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
-  reactStrictMode: true,
   redirects: async () => [
     {
-      source: "/:tenant/logout",
-      destination: "/:tenant/auth/logout",
+      source: "/logout",
+      destination: "/auth/logout",
       permanent: true
     }
   ]
+  // reactStrictMode: true,
+  // redirects: async () => [
+  //   {
+  //     source: "/:tenant/logout",
+  //     destination: "/:tenant/auth/logout",
+  //     permanent: true
+  //   }
+  // ]
 };
 
 export default nextConfig;

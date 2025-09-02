@@ -124,7 +124,8 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
               role="button"
               className="contrast"
               href={{
-                pathname: `/${tenant}/`,
+                // pathname: `/${tenant}/`,
+                pathname: '/',
                 query: { magicLink: "no" },
               }}
               {...(isPasswordLogin ? activeProps : inactiveProps )}
@@ -137,7 +138,8 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
               role="button"
               className="contrast"
               href={{
-                pathname: `/${tenant}/`,
+                // pathname: `/${tenant}/`,
+                pathname: '/',
                 query: { magicLink: "yes" },
               }}
               {...(isMagicLinkLogin ? activeProps : inactiveProps )}
@@ -150,7 +152,8 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
         {!isPasswordRecovery && (
           <Link
             href={{
-              pathname: `/${tenant}/`,
+              // pathname: `/${tenant}/`,
+              pathname: '/',
               query: { passwordRecovery: "yes" },
             }}
             style={{
