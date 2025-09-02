@@ -1,7 +1,7 @@
 import { getSupabaseAdminClient } from "@/supabase-utils/adminClient";
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
-import { buildUrl } from "@/utils/url-helpers";
+import { buildUrl, urlPath } from "@/utils/url-helpers";
 
 export async function POST(request, { params }) {
   const formData = await request.formData();
@@ -16,14 +16,9 @@ export async function POST(request, { params }) {
     },
   );
 
-  // if (error) {
-  //   return NextResponse.redirect(
-  //     new URL(`/error?type=${type}`, request.url),
-  //     302,
-  //   );
-  // }
+  const user = linkData.user
 
-  if (error) {
+  if (error || !user.app_metadata?.tenants.includes(params.tenant)) {
     return NextResponse.redirect(
       buildUrl(`/error?type=${type}`, params.tenant, request),
       302,

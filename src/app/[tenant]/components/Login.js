@@ -17,7 +17,7 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
   const isPasswordLogin = formType === FORM_TYPES.PASSWORD_LOGIN;
   const isMagicLinkLogin = formType === FORM_TYPES.MAGIC_LINK;
 
-  const formAction = isPasswordLogin ? `/${urlPath("auth/pw-login", tenant)}` : `/${urlPath("auth/magic-link", tenant)}`;
+  const formAction = isPasswordLogin ? `/${urlPath("/auth/pw-login", tenant)}` : `/${urlPath("/auth/magic-link", tenant)}`;
 
   const activeProps = { className: "contrast" };
   const inactiveProps = { className: "secondary outline" };
@@ -27,7 +27,12 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN") {
-        router.push(`/${tenant}/tickets`);
+        if (session.user.app_metadata.tenants?.includes(tenant)) {
+          router.push(`/${tenant}/tickets`);
+        } else {
+          supabase.auth.signOut()
+          alert("Could not sign in, tenant doesn't match")
+        }
       }
     });
 
