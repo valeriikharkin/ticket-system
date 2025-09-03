@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseReqResClient } from "./supabase-utils/reqResClient";
+import { buildUrl } from "./utils/url-helpers";
 
 // import { TENANT_MAP } from "./tenant-map";
 import { getSupabaseAdminClient } from "./supabase-utils/adminClient";

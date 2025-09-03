@@ -40,5 +40,6 @@ export function getHostnameAndPort(request) {
     hostname = realHostname
   }
 
-  return [hostname, port]
+  return [realHostname, port]
+  // return [hostname, port]
 }

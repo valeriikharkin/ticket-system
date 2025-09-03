@@ -57,7 +57,6 @@ export default function Nav({ tenant }) {
             className="secondary"
             onClick={(event) => {
               event.preventDefault()
-              // supabase.auth.signOut().then(() => router.push("/"))
               supabase.auth.signOut()
             }}
           >

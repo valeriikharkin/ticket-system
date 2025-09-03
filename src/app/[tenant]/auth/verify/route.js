@@ -6,11 +6,13 @@ export async function GET(request, { params }) {
   const { searchParams } = new URL(request.url);
   const hashed_token = searchParams.get("hashed_token");
   const isRecovery = searchParams.get("type") === "recovery";
+  const isSignUp = searchParams.get("type") === "signup";
 
   const supabase = getSupabaseCookiesUtilClient();
 
   let verifyType = "magiclink";
   if (isRecovery) verifyType = "recovery";
+  else if (isSignUp) verifyType = "signup"
 
   const { error } = await supabase.auth.verifyOtp({
     type: verifyType,
