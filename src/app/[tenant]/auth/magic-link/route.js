@@ -3,6 +3,7 @@ import { buildUrl } from "@/utils/url-helpers";
 import { sendOTPLink } from "@/utils/sendOTPLink";
 
 export async function POST(request, { params }) {
+  console.log("this is type, pararms.tenant and thanksUrl")
 
   const formData = await request.formData();
   const email = formData.get("email");
@@ -16,9 +17,11 @@ export async function POST(request, { params }) {
     params.tenant,
     request
   );
+  
+  console.log("this is type, pararms.tenant and thanksUrl", type, params.tenant, thanksUrl)
 
   const otpSuccess = await sendOTPLink(email, type, params.tenant, request);
-  
+
   if (!otpSuccess) {
     return NextResponse.redirect(errorUrl, 302);
   } else {

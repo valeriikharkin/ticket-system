@@ -54,14 +54,6 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
             })
             .then((result) => {
               !result.data?.user && alert("Could not sign in"); // new version
-
-              /** old version:
-              if (result.data?.user) {
-                router.push("/tickets");
-              } else {
-                alert("Could not sign in");
-              }
-              */
             });
         }
       }}
@@ -124,7 +116,6 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
               role="button"
               className="contrast"
               href={{
-                // pathname: `/${tenant}/`,
                 pathname: '/',
                 query: { magicLink: "no" },
               }}
@@ -138,7 +129,6 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
               role="button"
               className="contrast"
               href={{
-                // pathname: `/${tenant}/`,
                 pathname: '/',
                 query: { magicLink: "yes" },
               }}
@@ -152,7 +142,6 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
         {!isPasswordRecovery && (
           <Link
             href={{
-              // pathname: `/${tenant}/`,
               pathname: '/',
               query: { passwordRecovery: "yes" },
             }}
