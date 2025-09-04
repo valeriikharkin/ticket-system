@@ -1,6 +1,6 @@
 import { getSupabaseCookiesUtilClient } from "@/supabase-utils/cookiesUtilClient";
-import { NextResponse } from "next/server";
 import { buildUrl } from "@/utils/url-helpers";
+import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
   const { searchParams } = new URL(request.url);
@@ -8,34 +8,26 @@ export async function GET(request, { params }) {
   const isRecovery = searchParams.get("type") === "recovery";
   const isSignUp = searchParams.get("type") === "signup";
 
-  const supabase = getSupabaseCookiesUtilClient();
-
   let verifyType = "magiclink";
   if (isRecovery) verifyType = "recovery";
-  else if (isSignUp) verifyType = "signup"
+  else if (isSignUp) verifyType = "signup";
 
+  const tenantUrl = (path) => buildUrl(path, params.tenant, request);
+  const getRedirect = (path) => NextResponse.redirect(tenantUrl(path));
+
+  const supabase = getSupabaseCookiesUtilClient();
   const { error } = await supabase.auth.verifyOtp({
     type: verifyType,
     token_hash: hashed_token,
   });
 
   if (error) {
-    return NextResponse.redirect(
-      // new URL("/error?type=invalid_magiclink", request.url),
-      buildUrl("/error?type=invalid_magiclink", params.tenant, request)
-    );
-    
+    return getRedirect("/error?type=invalid_magiclink");
   } else {
     if (isRecovery) {
-      return NextResponse.redirect(
-        // new URL("/tickets/change-password", request.url),
-        buildUrl("/tickets/change-password", params.tenant, request)
-      );
+      return getRedirect("/tickets/change-password");
     } else {
-      return NextResponse.redirect(
-        // new URL("/tickets", request.url)
-        buildUrl("/tickets", params.tenant, request)
-      );
+      return getRedirect("/tickets");
     }
   }
 }

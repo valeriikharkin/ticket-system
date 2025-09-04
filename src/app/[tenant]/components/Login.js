@@ -17,7 +17,14 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
   const isPasswordLogin = formType === FORM_TYPES.PASSWORD_LOGIN;
   const isMagicLinkLogin = formType === FORM_TYPES.MAGIC_LINK;
 
-  const formAction = isPasswordLogin ? `/${urlPath("/auth/pw-login", tenant)}` : `/${urlPath("/auth/magic-link", tenant)}`;
+  const getPath = (subPath) => urlPath(subPath ?? "", tenant);
+
+  const formAction = getPath(
+    isPasswordLogin ? `/auth/pw-login` : `/auth/magic-link`,
+  );
+  const loginBasePath = getPath("/");
+
+  // const formAction = isPasswordLogin ? `/${urlPath("/auth/pw-login", tenant)}` : `/${urlPath("/auth/magic-link", tenant)}`;
 
   const activeProps = { className: "contrast" };
   const inactiveProps = { className: "secondary outline" };
@@ -116,7 +123,7 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
               role="button"
               className="contrast"
               href={{
-                pathname: '/',
+                pathname: loginBasePath,
                 query: { magicLink: "no" },
               }}
               {...(isPasswordLogin ? activeProps : inactiveProps )}
@@ -129,7 +136,7 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
               role="button"
               className="contrast"
               href={{
-                pathname: '/',
+                pathname: loginBasePath,
                 query: { magicLink: "yes" },
               }}
               {...(isMagicLinkLogin ? activeProps : inactiveProps )}
@@ -142,7 +149,7 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
         {!isPasswordRecovery && (
           <Link
             href={{
-              pathname: '/',
+              pathname: loginBasePath,
               query: { passwordRecovery: "yes" },
             }}
             style={{
