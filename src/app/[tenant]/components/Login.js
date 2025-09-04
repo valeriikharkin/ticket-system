@@ -154,6 +154,25 @@ export const Login = ({ formType = "pw-login", tenant, tenantName }) => {
             Go to Password Recovery
           </Link>
         )}
+        <br />
+        <button
+          type="button"
+          onClick={() => {
+            supabase.auth.signInWithOAuth({
+              provider: "google",
+              options: {
+                queryParams: {
+                  access_type: "offline",
+                  prompt: "consent",
+                  hd: tenantDomain,
+                },
+                redirectTo: window.location.origin + "/auth/verify-oauth",
+              },
+            });
+          }}
+        >
+          Sign in with Google
+        </button>
 
         <Link
           href={urlPath("/register", tenant)}
