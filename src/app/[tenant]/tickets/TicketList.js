@@ -19,6 +19,8 @@ export async function TicketList({ tenant, searchParams }) {
     .from("tickets")
     .select()
     .eq("tenant", tenant)
+    .order("status", { ascending: true })
+    .order("created_at", { ascending: false })
     .range(startingPoint, startingPoint + 5)
   
   const { count } = await supabase
@@ -43,7 +45,7 @@ export async function TicketList({ tenant, searchParams }) {
           {
             tickets.map((ticket, index) => (
               <tr key={ticket.id}>
-                <td>{index + 1}</td>
+                <td>{(page-1)*6 + index + 1}</td>
                 <td>{ticket.id}</td>
                 <td><Link href={urlPath(`/tickets/details/${ticket.id}`, tenant)}>{ticket.title}</Link></td>
                 <td>{TICKET_STATUS[ticket.status]}</td>
