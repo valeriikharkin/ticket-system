@@ -12,21 +12,44 @@ export async function TicketList({ tenant, searchParams }) {
   ) {
     page = Number(searchParams.page)
   }
-  const startingPoint = (page - 1) * 6
-  
+
   const supabase = getSupabaseCookiesUtilClient()
-  const { data: tickets, error } = await supabase
+  let countStatement = supabase
+    .from("tickets")
+    .select("*", { count: "exact", head: true })
+    .eq("tenant", tenant)
+
+  const startingPoint = (page - 1) * 6
+
+  let ticketsStatement = supabase
     .from("tickets")
     .select()
     .eq("tenant", tenant)
+  
+  const searchValue = searchParams.search?.trim()
+  if (searchValue) {
+    // filter by searchValue as well
+    const cleanSearchString = searchValue
+      .replaceAll('"', "")
+      .replaceAll("\\", "")
+      .replaceAll("%", "");
+
+    const postgrestSearchValue = '"%' + cleanSearchString + '%"';
+    const postgrestFilterString =
+      `title.ilike.${postgrestSearchValue}` +
+      `, description.ilike.${postgrestSearchValue}`;
+
+    countStatement = countStatement.or(postgrestFilterString);
+    ticketsStatement = ticketsStatement.or(postgrestFilterString);
+  }
+
+  ticketsStatement = ticketsStatement
     .order("status", { ascending: true })
     .order("created_at", { ascending: false })
     .range(startingPoint, startingPoint + 5)
   
-  const { count } = await supabase
-    .from("tickets")
-    .select("*", { count: "exact", head: true })
-    .eq("tenant", tenant)
+  const { count } = await countStatement
+  const { data: tickets } = await ticketsStatement
 
   const moreRows = count - page * 6 > 0
 
@@ -57,10 +80,25 @@ export async function TicketList({ tenant, searchParams }) {
 
       <div style={{ display: "flex" }}>
         {page > 1 && (
-          <Link role="button" href={{ query: { page: page - 1, r: Math.random() } }} style={{ marginRight: "10px" }}>Previous page</Link>
+          <Link 
+            role="button" 
+            href={{ 
+              query: { page: page - 1, r: Math.random(), search: searchParams.search } 
+            }} 
+            style={{ marginRight: "auto" }}
+          >
+            Previous page
+          </Link>
         )}
         {moreRows && (
-          <Link role="button" href={{ query: { page: page + 1, r: Math.random() } }}>Next page</Link>
+          <Link 
+            role="button" 
+            href={{ 
+              query: { page: page + 1, r: Math.random(), search: searchParams.search } 
+            }}
+          >
+            Next page
+          </Link>
         )}
       </div>
     </>

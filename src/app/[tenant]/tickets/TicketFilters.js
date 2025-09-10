@@ -1,14 +1,24 @@
 "use client"
 
+import { usePathname, useSearchParams, useRouter } from "next/navigation"
 import { useRef } from "react"
 
 export function TicketFilters({ tenant }) {
   const searchInputRef = useRef(null)
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  
   const onSubmit = (event) => {
     event.preventDefault();
     const search = searchInputRef.current.value
+    const updatedParams = new URLSearchParams(searchParams)
+    updatedParams.set("search", search)
+    updatedParams.set("page", 1)
+    updatedParams.set("r", Math.random())
+    router.push(pathname + "?" + updatedParams.toString())
 
-    alert("Search tickets containing " + search)
+    // alert("Search tickets containing " + search)
   }
 
   return (
