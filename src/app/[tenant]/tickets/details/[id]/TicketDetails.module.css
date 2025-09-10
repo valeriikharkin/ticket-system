@@ -1,13 +1,14 @@
-
 .ticketStatusGreen {
   color: greenyellow;
 }
+
 .authorAndDate {
   color: var(--secondary);
 }
 .authorAndDate strong {
   color: var(--contrast);
 }
+
 .ticketDetails {
   border: 1px solid #3c5c60;
 }
@@ -31,4 +32,11 @@
 .comment time {
   color: var(--secondary);
   padding-left: 0.5em;
+}
+.littledanger {
+  font-size: 0.9rem;
+  width: auto;
+  justify-self: end;
+  border-color: var(--del-color);
+  background: transparent;
 }
