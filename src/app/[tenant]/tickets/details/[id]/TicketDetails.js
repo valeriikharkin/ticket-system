@@ -5,6 +5,7 @@ import { TicketComments } from "./TicketComments";
 import { getSupabaseBrowserClient } from "@/supabase-utils/browserClient";
 import { urlPath } from "@/utils/url-helpers";
 import { useRouter } from "next/navigation";
+import { AssigneeSelect } from "@/components/AssigneeSelect";
 
 export function TicketDetails({
   tenant,
@@ -15,6 +16,7 @@ export function TicketDetails({
   author_name,
   dateString,
   isAuthor,
+  assignee,
 }) {
   const supabase = getSupabaseBrowserClient();
   const router = useRouter();
@@ -30,24 +32,39 @@ export function TicketDetails({
             </strong>
           </div>
 
-          {isAuthor && (
-            <button
-              role="button"
-              // className="little-danger"
-              className={classes.littledanger}
-              onClick={() => {
-                supabase
-                  .from("tickets")
-                  .delete()
-                  .eq("id", id)
-                  .then((res) => {
-                    router.push(urlPath("/tickets", tenant));
-                  });
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "end",
+            }}
+          >
+            <AssigneeSelect
+              tenant={tenant}
+              onValueChanged={(v) => {
+                // todo
               }}
-            >
-              Delete ticket
-            </button>
-          )}
+              initialValue={assignee}
+            />
+            {isAuthor && (
+              <button
+                role="button"
+                // className="little-danger"
+                className={classes.littledanger}
+                onClick={() => {
+                  supabase
+                    .from("tickets")
+                    .delete()
+                    .eq("id", id)
+                    .then((res) => {
+                      router.push(urlPath("/tickets", tenant));
+                    });
+                }}
+              >
+                Delete ticket
+              </button>
+            )}
+          </div>
         </div>
         <br />
         <small className={classes.authorAndDate}>
